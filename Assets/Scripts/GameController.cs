@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour
     {
         this.m_rects = new List<RectsController>();
 
-        const int kRectsNum = 30;
+        const int kRectsNum = 60;
         for (int i = 0; i < kRectsNum; ++i)
         {
             // 矩形の初期位置とサイズを決める

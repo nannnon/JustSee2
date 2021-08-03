@@ -22,7 +22,7 @@ public class RectsController : MonoBehaviour
         this.m_gc = gc;
         this.m_size = size;
         this.m_dir = (int)Random.Range(0, 4);
-        this.m_vel = Random.Range(0.01f, 0.1f);
+        this.m_vel = Random.Range(0.01f, 10f);
         this.m_myIndex = index;
 
         Vector2 centerPos = new Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
@@ -43,23 +43,23 @@ public class RectsController : MonoBehaviour
         }
     }
 
-    void Move(float vel)
+    void Move(float step)
     {
         Vector3 pos = this.transform.position;
 
         switch (this.m_dir)
         {
             case 0:
-                pos.y += vel;
+                pos.y += step;
                 break;
             case 1:
-                pos.x += vel;
+                pos.x += step;
                 break;
             case 2:
-                pos.y -= vel;
+                pos.y -= step;
                 break;
             case 3:
-                pos.x -= vel;
+                pos.x -= step;
                 break;
             default:
                 throw new System.Exception();
@@ -68,10 +68,11 @@ public class RectsController : MonoBehaviour
         this.transform.position = pos;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // 先頭の矩形を前進
-        this.Move(this.m_vel);
+        float step = this.m_vel * Time.deltaTime;
+        this.Move(step);
 
         // 衝突したら後退して方向転換
         Vector2 centerPos = this.transform.position;
@@ -80,7 +81,7 @@ public class RectsController : MonoBehaviour
         bool hit = this.m_gc.CheckHit(pos.x, pos.y, size.x, size.y, this.m_myIndex);
         if (hit)
         {
-            this.Move(-this.m_vel);
+            this.Move(-step);
             this.m_dir = (this.m_dir + 1) % 4;
         }
 
