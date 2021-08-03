@@ -22,7 +22,7 @@ public class RectsController : MonoBehaviour
         this.m_gc = gc;
         this.m_size = size;
         this.m_dir = (int)Random.Range(0, 4);
-        this.m_vel = Random.Range(0.01f, 10f);
+        this.m_vel = Random.Range(0.01f, 5f);
         this.m_myIndex = index;
 
         Vector2 centerPos = new Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
