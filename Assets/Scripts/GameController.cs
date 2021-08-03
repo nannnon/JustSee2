@@ -19,10 +19,10 @@ public class GameController : MonoBehaviour
     {
         this.m_rects = new List<RectsController>();
 
-        const int kRectsNum = 70;
+        const int kRectsNum = 30;
         for (int i = 0; i < kRectsNum; ++i)
         {
-            // 矩形の初期位置を決める
+            // 矩形の初期位置とサイズを決める
             Vector2 pos = new Vector2();
             Vector2 size = new Vector2();
             {
@@ -31,8 +31,8 @@ public class GameController : MonoBehaviour
 
                 while (counter < kCounterTh)
                 {
-                    size.x = Random.Range(0.1f, 0.5f);
-                    size.y = Random.Range(0.1f, 0.5f);
+                    size.x = Random.Range(0.1f, 1f);
+                    size.y = Random.Range(0.1f, 1f);
                     pos.x = Random.Range(kX0, kX1 - size.x);
                     pos.y = Random.Range(kY0, kY1 - size.y);
 

@@ -8,7 +8,7 @@ public class RectsController : MonoBehaviour
     Vector2 m_size;
     int m_dir;
     float m_vel;
-    int m_index;
+    int m_myIndex;
 
     // 後続する矩形
     [SerializeField]
@@ -23,7 +23,7 @@ public class RectsController : MonoBehaviour
         this.m_size = size;
         this.m_dir = (int)Random.Range(0, 4);
         this.m_vel = Random.Range(0.01f, 0.1f);
-        this.m_index = index;
+        this.m_myIndex = index;
 
         Vector2 centerPos = new Vector2(pos.x + size.x / 2, pos.y + size.y / 2);
         this.transform.position = centerPos;
@@ -77,7 +77,7 @@ public class RectsController : MonoBehaviour
         Vector2 centerPos = this.transform.position;
         Vector2 size = this.m_size;
         Vector2 pos = new Vector2(centerPos.x - size.x / 2, centerPos.y - size.y / 2);
-        bool hit = this.m_gc.CheckHit(pos.x, pos.y, size.x, size.y, this.m_index);
+        bool hit = this.m_gc.CheckHit(pos.x, pos.y, size.x, size.y, this.m_myIndex);
         if (hit)
         {
             this.Move(-this.m_vel);
@@ -103,26 +103,26 @@ public class RectsController : MonoBehaviour
             Vector2 size = this.m_size;
             Vector2 pos = new Vector2(centerPos.x - size.x / 2, centerPos.y - size.y / 2);
 
-            if (pos.x + size.x / 2 >= x &&
-                pos.x <= x + w &&
-                pos.y + size.y / 2 >= y &&
-                pos.y <= y + h)
+            if (pos.x + size.x >= x     &&
+                pos.x          <= x + w &&
+                pos.y + size.y >= y     &&
+                pos.y          <= y + h )
             {
                 return true;
             }
         }
 
-            // 後続
-            for (int i = 0; i < kFRN; ++i)
+        // 後続
+        for (int i = 0; i < kFRN; ++i)
         {
             Vector2 centerPos = this.m_frs[i].transform.position;
             Vector2 size = this.m_size;
             Vector2 pos = new Vector2(centerPos.x - size.x / 2, centerPos.y - size.y / 2);
 
-            if (pos.x + size.x / 2 >= x     &&
-                pos.x              <= x + w &&
-                pos.y + size.y / 2 >= y     &&
-                pos.y              <= y + h )
+            if (pos.x + size.x >= x     &&
+                pos.x          <= x + w &&
+                pos.y + size.y >= y     &&
+                pos.y          <= y + h )
             {
                 return true;
             }
