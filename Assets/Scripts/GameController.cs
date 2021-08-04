@@ -9,14 +9,17 @@ public class GameController : MonoBehaviour
 
     List<RectsController> m_rects;
 
-    const float kX0 = -12;
-    const float kY0 = -5;
-    const float kX1 = 12;
-    const float kY1 = 5;
+    Vector2 m_areaLB;   // 画面の左下のワールド座標
+    Vector2 m_areaRT;   // 画面の右上のワールド座標
 
 
     void Start()
     {
+        // 画面端のワールド座標を取得
+        this.m_areaLB = Camera.main.ScreenToWorldPoint(Vector3.zero);
+        this.m_areaRT = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+
+        // 各矩形を生成
         this.m_rects = new List<RectsController>();
 
         const int kRectsNum = 60;
@@ -33,8 +36,8 @@ public class GameController : MonoBehaviour
                 {
                     size.x = Random.Range(0.1f, 1f);
                     size.y = Random.Range(0.1f, 1f);
-                    pos.x = Random.Range(kX0, kX1 - size.x);
-                    pos.y = Random.Range(kY0, kY1 - size.y);
+                    pos.x = Random.Range(this.m_areaLB.x, this.m_areaRT.x - size.x);
+                    pos.y = Random.Range(this.m_areaLB.y, this.m_areaRT.y - size.y);
 
                     bool hit = this.CheckHit(pos.x, pos.y, size.x, size.y, -1);
                     if (!hit)
@@ -61,8 +64,8 @@ public class GameController : MonoBehaviour
     public bool CheckHit(float x, float y, float w, float h, int ignore_index)
     {
         // 画面端との接触チェック
-        if (x < kX0 || x + w > kX1 ||
-            y < kY0 || y + h > kY1)
+        if (x < this.m_areaLB.x || x + w > this.m_areaRT.x ||
+            y < this.m_areaLB.y || y + h > this.m_areaRT.y)
         {
             return true;
         }
