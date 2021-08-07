@@ -5,11 +5,8 @@ using System;
 
 public class GameContoller : MonoBehaviour
 {
-    [SerializeField]
-    GameObject m_cellPrefab = null;
-
     bool[,] m_cells;
-    SpriteRenderer[,] m_srs;
+    Texture2D m_tex;
 
     // Start is called before the first frame update
     void Start()
@@ -21,34 +18,34 @@ public class GameContoller : MonoBehaviour
         float cellSize = (areaRT.x - areaLB.x) / kHorCellsNum;
         int verCellsNum = Mathf.FloorToInt((areaRT.y - areaLB.y) / cellSize);
 
-        // 初期化
-        this.m_cells = new bool[verCellsNum, kHorCellsNum];
-        for (int  j = 0; j < this.m_cells.GetLength(0); ++j)
+        // セルの状態変数の初期化
+        this.m_cells = new bool[kHorCellsNum, verCellsNum];
+        for (int  i = 0; i < this.m_cells.GetLength(0); ++i)
         {
-            for (int i = 0; i < this.m_cells.GetLength(1); ++i)
+            for (int j = 0; j < this.m_cells.GetLength(1); ++j)
             {
-                this.m_cells[j, i] = false;
+                this.m_cells[i, j] = false;
             }
         }
 
-        this.m_srs = new SpriteRenderer[verCellsNum, kHorCellsNum];
-        for (int j = 0; j < this.m_cells.GetLength(0); ++j)
+        // セルの描画を行う平面の大きさを、カメラのサイズにフィットさせる
+        GameObject plane = GameObject.Find("Plane");
+        Vector2 planeDefaultSise = new Vector2(10, 10);
+        Vector2 areaSize = areaRT - areaLB;
+        plane.transform.localScale = new Vector3(areaSize.x / planeDefaultSise.x, 1, areaSize.y / planeDefaultSise.y);
+
+        // テクスチャを生成・設定
+        this.m_tex = new Texture2D(kHorCellsNum, verCellsNum);
+        for (int i = 0; i < this.m_tex.width; ++i)
         {
-            for (int i = 0; i < this.m_cells.GetLength(1); ++i)
+            for (int j = 0; j < this.m_tex.height; ++j)
             {
-                GameObject go = Instantiate(this.m_cellPrefab);
-                this.m_srs[j, i] = go.GetComponent<SpriteRenderer>();
-                this.m_srs[j, i].color = Color.black;
-
-                // 位置
-                float y = j * cellSize + cellSize / 2 + areaLB.y;
-                float x = i * cellSize + cellSize / 2 + areaLB.x;
-                go.transform.position = new Vector3(x, y);
-
-                // スケール
-                go.transform.localScale = new Vector3(cellSize, cellSize);
+                this.m_tex.SetPixel(i, j, Color.black);
             }
         }
+        this.m_tex.Apply();
+        this.m_tex.filterMode = FilterMode.Point;
+        plane.GetComponent<MeshRenderer>().material.mainTexture = this.m_tex;
 
         // 乱数をばら撒く
         this.SetRandom();
@@ -57,68 +54,70 @@ public class GameContoller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool[,] preCells = new bool[this.m_cells.GetLength(0), this.m_cells.GetLength(1)];
+        int width = this.m_cells.GetLength(0);
+        int height = this.m_cells.GetLength(1);
+
+        bool[,] preCells = new bool[width, height];
         Array.Copy(this.m_cells, preCells, this.m_cells.Length);
 
-        int height = this.m_cells.GetLength(0);
-        int width = this.m_cells.GetLength(1);
-        for (int j = 0; j < height; ++j)
+        for (int i = 0; i < width; ++i)
         {
-            for (int i = 0; i < width; ++i)
+            for (int j = 0; j < height; ++j)
             {
                 // 誕生/死滅
                 int neighboringAliveCellsNum = 0;
-                for (int dy = -1; dy < 2; ++dy)
+                for (int dx = -1; dx < 2; ++dx)
                 {
-                    for (int dx = -1; dx < 2; ++dx)
+                    for (int dy = -1; dy < 2; ++dy)
                     {
-                        if (dy == 0 && dx == 0)
+                        if (dx == 0 && dy == 0)
                         {
                             continue;
                         }
 
-                        int y = LoopCoord(j + dy, height);
                         int x = LoopCoord(i + dx, width);
-                        if (preCells[y, x])
+                        int y = LoopCoord(j + dy, height);
+                        if (preCells[x, y])
                         {
                             ++neighboringAliveCellsNum;
                         }
                     }
                 }
 
-                if (preCells[j, i])
+                if (preCells[i, j])
                 {
                     if (neighboringAliveCellsNum == 2 || neighboringAliveCellsNum == 3)
                     {
-                        this.m_cells[j, i] = true;
+                        this.m_cells[i, j] = true;
                     }
                     else
                     {
-                        this.m_cells[j, i] = false;
+                        this.m_cells[i, j] = false;
                     }
                 }
                 else
                 {
                     if (neighboringAliveCellsNum == 3)
                     {
-                        this.m_cells[j, i] = true;
+                        this.m_cells[i, j] = true;
                     }
                 }
 
 
                 // 色反映
-                if (m_cells[j, i])
+                if (m_cells[i, j])
                 {
-                    this.m_srs[j, i].color = Color.green;
+                    this.m_tex.SetPixel(i, j, Color.green);
                 }
                 else
                 {
-                    this.m_srs[j, i].color = Color.black;
+                    this.m_tex.SetPixel(i, j, Color.black);
                 }
             }
         }
+        this.m_tex.Apply();
 
-        // クリックされたランダムに
+        // クリックされたらランダムに
         if (Input.anyKeyDown)
         {
             this.SetRandom();
