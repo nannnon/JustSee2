@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class GameContoller : MonoBehaviour
+public class LifeGameContoller : MonoBehaviour
 {
     bool[,] m_cells;
     Texture2D m_tex;
