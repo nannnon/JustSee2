@@ -48,7 +48,7 @@ public class AlphaGaussianController : MonoBehaviour
             ball.pos = new Vector2(20, 64);
             ball.vel = new Vector2(4, 0);
             ball.r = 8;
-            ball.color = new Color32(222, 0, 0, 200);
+            ball.color = new Color32(222, 0, 0, 255);
             this.m_balls.Add(ball);
         }
         {
@@ -56,7 +56,7 @@ public class AlphaGaussianController : MonoBehaviour
             ball.pos = new Vector2(100, 84);
             ball.vel = new Vector2(4, 0);
             ball.r = 8;
-            ball.color = new Color32(20, 220, 80, 200);
+            ball.color = new Color32(20, 220, 80, 255);
             this.m_balls.Add(ball);
         }
     }
@@ -73,7 +73,7 @@ public class AlphaGaussianController : MonoBehaviour
         {
             for (int y = 0; y < this.m_tex.height; ++y)
             {
-                int sumR = 0, sumG = 0, sumB = 0, sumA = 0;
+                int sum = 0;
                 int counter = 0;
                 for (int dx = -1; dx < 2; ++dx)
                 {
@@ -89,19 +89,17 @@ public class AlphaGaussianController : MonoBehaviour
                         }
 
                         Color32 color = prePixels[xy2i(i, j, this.m_tex.width)];
-                        sumR += color.r;
-                        sumG += color.g;
-                        sumB += color.b;
-                        sumA += color.a;
+                        sum += (color.a << 24) + (color.b << 16) + (color.g << 8) + color.r;
                         ++counter;
                     }
                 }
 
+                int mean = Mathf.RoundToInt((float)sum / counter);
                 int index = xy2i(x, y, this.m_tex.width);
-                pixels[index].r = (byte)Mathf.RoundToInt((float)sumR / counter);
-                pixels[index].g = (byte)Mathf.RoundToInt((float)sumG / counter);
-                pixels[index].b = (byte)Mathf.RoundToInt((float)sumB / counter);
-                pixels[index].a = (byte)Mathf.RoundToInt((float)sumA / counter);
+                pixels[index].a = (byte) (mean >> 24);
+                pixels[index].b = (byte)((mean >> 16) & 0xFF);
+                pixels[index].g = (byte)((mean >>  8) & 0xFF);
+                pixels[index].r = (byte)( mean        & 0xFF);
             }
         }
 
