@@ -89,17 +89,16 @@ public class AlphaGaussianController : MonoBehaviour
                         }
 
                         Color32 color = prePixels[xy2i(i, j, this.m_tex.width)];
-                        sum += (color.a << 24) + (color.b << 16) + (color.g << 8) + color.r;
+                        sum += (color.r << 16) + (color.g << 8) + color.b;
                         ++counter;
                     }
                 }
 
                 int mean = Mathf.RoundToInt((float)sum / counter);
                 int index = xy2i(x, y, this.m_tex.width);
-                pixels[index].a = (byte) (mean >> 24);
-                pixels[index].b = (byte)((mean >> 16) & 0xFF);
+                pixels[index].r = (byte)((mean >> 16) & 0xFF);
                 pixels[index].g = (byte)((mean >>  8) & 0xFF);
-                pixels[index].r = (byte)( mean        & 0xFF);
+                pixels[index].b = (byte)( mean        & 0xFF);
             }
         }
 
