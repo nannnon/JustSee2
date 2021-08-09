@@ -43,22 +43,28 @@ public class AlphaGaussianController : MonoBehaviour
 
         // ボール追加
         this.m_balls = new List<Ball>();
-        {
-            Ball ball = new Ball();
-            ball.pos = new Vector2(20, 64);
-            ball.vel = new Vector2(4, 0);
-            ball.r = 8;
-            ball.color = new Color32(222, 0, 0, 255);
-            this.m_balls.Add(ball);
-        }
-        {
-            Ball ball = new Ball();
-            ball.pos = new Vector2(100, 84);
-            ball.vel = new Vector2(4, 0);
-            ball.r = 8;
-            ball.color = new Color32(20, 220, 80, 255);
-            this.m_balls.Add(ball);
-        }
+        this.AddRandomBall();
+        this.AddRandomBall();
+    }
+
+    void AddRandomBall()
+    {
+        Ball ball = new Ball();
+
+        ball.r = Random.value * 7 + 1;
+        ball.pos = new Vector2((Random.value * this.m_tex.width  - 2 * ball.r) + ball.r,
+                               (Random.value * this.m_tex.height - 2 * ball.r) + ball.r);
+        ball.vel = new Vector2(Random.value * 3 + 1, 0);
+        ball.color = new Color32(this.Random255(), this.Random255(), this.Random255(), 255);
+
+        this.m_balls.Add(ball);
+    }
+
+    byte Random255()
+    {
+        float val = Random.value * 255;
+        byte val2 = (byte)Mathf.RoundToInt(val);
+        return val2;
     }
 
     // Update is called once per frame
