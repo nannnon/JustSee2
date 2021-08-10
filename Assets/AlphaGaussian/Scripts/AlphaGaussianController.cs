@@ -43,8 +43,11 @@ public class AlphaGaussianController : MonoBehaviour
 
         // ボール追加
         this.m_balls = new List<Ball>();
-        this.AddRandomBall();
-        this.AddRandomBall();
+        const int kBallsNum = 100;
+        for (int  i = 0; i < kBallsNum; ++i)
+        {
+            this.AddRandomBall();
+        }
     }
 
     void AddRandomBall()
@@ -79,7 +82,7 @@ public class AlphaGaussianController : MonoBehaviour
         {
             for (int y = 0; y < this.m_tex.height; ++y)
             {
-                int sum = 0;
+                int sumR = 0, sumG = 0, sumB = 0, sumA = 0;
                 int counter = 0;
                 for (int dx = -1; dx < 2; ++dx)
                 {
@@ -95,16 +98,19 @@ public class AlphaGaussianController : MonoBehaviour
                         }
 
                         Color32 color = prePixels[xy2i(i, j, this.m_tex.width)];
-                        sum += (color.r << 16) + (color.g << 8) + color.b;
+                        sumR += color.r;
+                        sumG += color.g;
+                        sumB += color.b;
+                        sumA += color.a;
                         ++counter;
                     }
                 }
 
-                int mean = Mathf.RoundToInt((float)sum / counter);
                 int index = xy2i(x, y, this.m_tex.width);
-                pixels[index].r = (byte)((mean >> 16) & 0xFF);
-                pixels[index].g = (byte)((mean >>  8) & 0xFF);
-                pixels[index].b = (byte)( mean        & 0xFF);
+                pixels[index].r = (byte)Mathf.RoundToInt((float)sumR / counter);
+                pixels[index].g = (byte)Mathf.RoundToInt((float)sumG / counter);
+                pixels[index].b = (byte)Mathf.RoundToInt((float)sumB / counter);
+                pixels[index].a = (byte)Mathf.RoundToInt((float)sumA / counter);
             }
         }
 
