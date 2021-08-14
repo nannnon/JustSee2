@@ -19,8 +19,8 @@ public class FractalTreeController : MonoBehaviour
 
         Vector2 areaLB = Camera.main.ScreenToWorldPoint(Vector3.zero);
         Vector2 areaRT = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-        float length = 1f;
-        m_startPos = new Vector2(Random.Range(areaLB.x, areaRT.x), Random.Range(areaLB.y, areaRT.y - length));
+        float length = Random.Range(0.3f, 2f);
+        m_startPos = new Vector2(Random.Range(areaLB.x, areaRT.x), Random.Range(areaLB.y, areaRT.y - 2 * length));
 
         Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 

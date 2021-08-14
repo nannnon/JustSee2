@@ -54,8 +54,8 @@ public class BranchController : MonoBehaviour
                 if (m_n > 0)
                 {
                     Vector2 startPos = m_lr.GetPosition(1);
-                    float deltaTheta = Mathf.PI / 6f;
-                    float length = m_length / 1.5f;
+                    float deltaTheta = Random.Range(Mathf.PI / 7, Mathf.PI / 5);
+                    float length = m_length / Random.Range(1f, 2f);
                     int n = m_n - 1;
 
                     // 右
