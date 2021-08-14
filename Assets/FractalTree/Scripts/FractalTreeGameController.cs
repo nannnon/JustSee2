@@ -10,8 +10,7 @@ public class FractalTreeGameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // 1秒毎にフラクタルツリーを生成
-        InvokeRepeating(nameof(GenerateFractalTree), 0, 1);
+        InvokeRepeating(nameof(GenerateFractalTree), 0, 0.5f);
     }
 
     void GenerateFractalTree()
