@@ -33,7 +33,7 @@ public class BranchController : MonoBehaviour
     {
         if (m_state == State.Growing)
         {
-            m_currentLength += 0.01f;
+            m_currentLength += 1 * Time.deltaTime;
             if (m_currentLength > m_length)
             {
                 m_currentLength = m_length;
@@ -81,14 +81,14 @@ public class BranchController : MonoBehaviour
             Vector3[] pos = new Vector3[m_lr.positionCount];
             m_lr.GetPositions(pos);
 
-            const float kDropVel = -0.01f;
             for (int i = 0; i < pos.Length; ++i)
             {
-                pos[i].y += kDropVel;
+                pos[i].y -= 1 * Time.deltaTime;
             }
 
             m_lr.SetPositions(pos);
 
+            // 地面についたら削除
             if (pos[0].y <= m_earthPosY)
             {
                 m_state = State.None;
