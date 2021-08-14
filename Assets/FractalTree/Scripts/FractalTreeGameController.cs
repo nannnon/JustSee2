@@ -15,6 +15,6 @@ public class FractalTreeGameController : MonoBehaviour
 
     void GenerateFractalTree()
     {
-        GameObject gc = Instantiate(m_fractalTreePrefab);
+        Instantiate(m_fractalTreePrefab);
     }
 }
