@@ -7,27 +7,24 @@ public class FractalTreeController : MonoBehaviour
     [SerializeField]
     GameObject m_branchPrefab = null;
 
-    List<BranchController> m_branchControllers;
+    List<BranchController> m_branchControllers = new List<BranchController>();
     Vector2 m_startPos;
-    int m_blastedBranchesNum;
+    int m_blastedBranchesNum = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_branchControllers = new List<BranchController>();
-        m_blastedBranchesNum = 0;
-
         GameObject go = Instantiate(m_branchPrefab);
         BranchController bc = go.GetComponent<BranchController>();
-        {
-            Vector2 areaLB = Camera.main.ScreenToWorldPoint(Vector3.zero);
-            Vector2 areaRT = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-            float length = 1f;
-            m_startPos = new Vector2(Random.Range(areaLB.x, areaRT.x), Random.Range(areaLB.y, areaRT.y - length));
-            Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 
-            bc.Set(m_startPos, Mathf.PI / 2f, length, color, 5, this);
-        }
+        Vector2 areaLB = Camera.main.ScreenToWorldPoint(Vector3.zero);
+        Vector2 areaRT = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        float length = 1f;
+        m_startPos = new Vector2(Random.Range(areaLB.x, areaRT.x), Random.Range(areaLB.y, areaRT.y - length));
+
+        Color color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
+
+        bc.Set(m_startPos, Mathf.PI / 2f, length, color, 5, this);
 
         Invoke(nameof(StartBlasting), 10);
     }
@@ -43,9 +40,15 @@ public class FractalTreeController : MonoBehaviour
 
     void StartBlasting()
     {
-        foreach (var bc in m_branchControllers)
+        StartCoroutine(StartBlasting2());
+    }
+
+    IEnumerator StartBlasting2()
+    {
+        for (int i = m_branchControllers.Count - 1; i >= 0; --i)
         {
-            bc.StartBlasting(m_startPos.y);
+            m_branchControllers[i].StartBlasting(m_startPos.y);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 
