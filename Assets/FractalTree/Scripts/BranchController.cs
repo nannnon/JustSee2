@@ -117,8 +117,8 @@ public class BranchController : MonoBehaviour
         m_lr.SetPosition(1, m_startPos);
         m_lr.startColor = m_color;
         m_lr.endColor = m_color;
-        m_lr.startWidth = 0.1f;
-        m_lr.endWidth = 0.1f;
+        m_lr.startWidth = 0.05f;
+        m_lr.endWidth = 0.05f;
 
         m_ftc.AddBC(this);
     }
