@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour
 
     float _theta = Mathf.PI / 4;
     float _phi = Mathf.PI / 4;
-    float _radius = 1;
+    float _radius = 0.1f;
     
     // Update is called once per frame
     void Update()
@@ -49,7 +49,7 @@ public class CameraController : MonoBehaviour
         }
 
         {
-            float dr = 1 * Time.deltaTime;
+            float dr = 0.1f * Time.deltaTime;
 
             if (Input.GetKey(KeyCode.E))
             {
